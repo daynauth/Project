@@ -3,6 +3,7 @@ import Data.Ratio
 import System.Random
 import Control.Monad
 import Control.Applicative
+import System.Environment
 
 
 degreeGPE [] = 0
@@ -47,8 +48,9 @@ generatePoly n = do
   let p = combine x y
   return p
 
-main = do
-  p1 <- generatePoly 3
-  p2 <- generatePoly 2
+main = do args <- getArgs
+  let n = read (args!!0) :: Int
+  p1 <- generatePoly n
+  p2 <- generatePoly n
   let r1 = resultant' p1 p2
   print r1
