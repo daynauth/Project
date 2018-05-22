@@ -47,7 +47,6 @@ generatePoly n = do
   return p
 
 main = do (a:_) <- getArgs
-          --let n = read (a!!0) :: Int
           let n = read a :: Int
           p1 <- generatePoly n
           p2 <- generatePoly n
