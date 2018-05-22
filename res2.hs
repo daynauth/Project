@@ -35,22 +35,21 @@ resultant' u v = determinant $ sMatrix u v
 generateR :: Int -> IO [Int]
 generateR n = do
   gen <- newStdGen
-  return $ take n $ randomRs (1, 100) gen
+  return $ take n $ randomRs (1, 10) gen
 
-combine (x:xs) [] = x % 1 : combine xs []
-combine [] p = []
-combine (x:xs) (y:ys) = x % y : combine xs ys
+
+convertToRatio = map (%1)
 
 
 generatePoly n = do
   x <- generateR n
-  y <- generateR n
-  let p = combine x y
+  let p = convertToRatio x
   return p
 
-main = do args <- getArgs
-  let n = read (args!!0) :: Int
-  p1 <- generatePoly n
-  p2 <- generatePoly n
-  let r1 = resultant' p1 p2
-  print r1
+main = do (a:_) <- getArgs
+          --let n = read (a!!0) :: Int
+          let n = read a :: Int
+          p1 <- generatePoly n
+          p2 <- generatePoly n
+          let r1 = resultant' p1 p2
+          print r1
