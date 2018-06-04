@@ -1,3 +1,5 @@
+{-# LANGUAGE BangPatterns #-}
+
 import Data.List
 import Data.Ratio
 import System.Random
@@ -17,12 +19,12 @@ minusPoly p1 p2 = addPoly p1 (multiplyBy (-1) p2)
 multiplyByX p = 0:p
 
 degreeGPE [] = 0
-degreeGPE p = if (last p == 0)
+degreeGPE !p = if (last p == 0)
                 then degreeGPE $ init p
                 else length p - 1
 
 lceGPE [] = 0
-lceGPE p = if (last p == 0)
+lceGPE !p = if (last p == 0)
                 then lceGPE $ init p
                 else last p
 
@@ -41,7 +43,7 @@ t2 = [3,2] ::  [Ratio Integer]
 remSequence :: Integral a => [Ratio a] -> [Ratio a] -> [Ratio a]
 remSequence [] [] = []
 remSequence r [] = r
-remSequence r v
+remSequence !r !v
                 | degreeGPE rn < degreeGPE v = rn
                 | otherwise = remSequence rn v
                 where rn = minusPoly r (multiplyBy fract xn)
@@ -49,7 +51,7 @@ remSequence r v
                       fract = lceGPE r/lceGPE v
                       expn = fromIntegral(degreeGPE r - degreeGPE v)
 
-resultant u v = if (n == 0)
+resultant !u !v = if (n == 0)
                 then (firstPoly v) ^ m
                 else if (isZero r)
                                 then 0
@@ -76,5 +78,7 @@ main = do (a:_) <- getArgs
           let n = read a :: Int
           p1 <- generatePoly n
           p2 <- generatePoly n
+          print p1
+          print p2
           let r1 = resultant p1 p2
           print r1
