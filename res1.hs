@@ -8,6 +8,7 @@ import Control.Applicative
 import System.Environment
 
 
+
 multiplyBy a p1 = map (a*) p1
 
 addPoly p1 p2 = if (length p1 >= length p2)
@@ -74,6 +75,7 @@ generatePoly n = do
                   let p = convertToRatio x
                   return p
 
+{-
 main = do (a:_) <- getArgs
           let n = read a :: Int
           p1 <- generatePoly n
@@ -82,3 +84,4 @@ main = do (a:_) <- getArgs
           print p2
           let r1 = resultant p1 p2
           print r1
+-}
