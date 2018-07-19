@@ -1,6 +1,8 @@
 module Poly(
 Poly,
 Coef,
+Vec,
+Matrix,
 multiplyBy,
 addPoly,
 minusPoly,
@@ -16,6 +18,9 @@ import Data.Ratio
 
 type Coef = Ratio Integer
 type Poly = [Coef]
+
+type Vec = [Ratio Integer]
+type Matrix = [Vec]
 
 multiplyBy :: Coef -> Poly -> Poly
 multiplyBy a p1 = map (a*) p1
