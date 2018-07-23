@@ -51,5 +51,5 @@ parResultant' u v = parDeterminant $ sMatrix u v
 resultant' :: Poly -> Poly -> Coef
 resultant' u v = determinant $ parSMatrix u v
 
---main = print $ parResultant' [1,2,3,345,67,345,345,343,484,6884,4,7,88,78895, 4554,548,68,487,693,-4854,2,3] [4554,548,68,487,693,-4854,2,3,1,2,3,345,67,345,345,343,484,6884]
-main = print $ parResultant' [1,2,3,345,67,345,343] [67,693,2,3, 5, 1]
+
+main = print $ parResultant' [84,84,4,2,1,5,3,4] [4,4,5,5,4]--main = print $ parResultant' [1,2,3,345,67,345,345,343,484,6884,4,7,88,78895, 4554,548,68,487,693,-4854,2,3] [4554,548,68,487,693,-4854,2,3,1,2,3,345,67,345,345,343,484,6884]

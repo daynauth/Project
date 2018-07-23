@@ -16,7 +16,7 @@ parMultiplyBy a p1 = parMap rpar (a*) p1
 remainder :: Poly -> Poly -> Poly
 remainder [] [] = []
 remainder r [] = r
-remainder r v
+remainder !r !v
                 | degreeGPE rn < degreeGPE v = rn
                 | otherwise = remainder rn v
                 where rn = minusPoly r (parMultiplyBy fract xn)
@@ -27,7 +27,7 @@ remainder r v
 --parFold f = foldl1' f . withStrategy (parList rseq)
 parFold f = foldl1' f . withStrategy (parBuffer 5 rdeepseq)
 
-parResultant u v = (firstPoly $ last r) * parFold (*) [(-1) ^ (m * n) * l ^ (m - s) | i <- [0 .. n - 3], 
+parResultant u v = (firstPoly $ last r) * foldT' (*) [(-1) ^ (m * n) * l ^ (m - s) | i <- [0 .. n - 3], 
       let m = degreeGPE (r !! i); n = degreeGPE (r !! (i + 1)); s = degreeGPE (r !! (i + 2)); l = lceGPE (r !! (i + 1))] 
        where r = remSeq u v
              n = length r
@@ -42,6 +42,28 @@ remSeq u v
     | degreeGPE u <= 0 = [u]
     | otherwise = [u] ++ (remSeq v r)
       where r = remainder u v
+
+foldT f [] = 1      
+foldT f (x:[]) = x
+foldT f xs = 
+      let n = length xs
+          (ys, zs) = splitAt (n `div` 2) xs
+          left = foldT f ys
+          right = foldT f zs
+          in left `par` (right `pseq` (left `f` right))
+
+
+foldT' f [] = 1      
+foldT' f (x:[]) = x
+foldT' f xs = 
+      let n = length xs
+          (ys, zs) = splitAt (n `div` 2) xs
+          in runEval $ do
+              left <- rpar (foldT' f ys)
+              right <- rpar (foldT' f zs)
+              rseq left
+              rseq right
+              return (left `f` right)
 
 
 
