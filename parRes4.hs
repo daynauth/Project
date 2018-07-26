@@ -1,4 +1,4 @@
-
+{-# LANGUAGE ParallelListComp #-}
 {-# LANGUAGE BangPatterns #-}
 
 import Poly
@@ -12,6 +12,15 @@ import Control.DeepSeq
 
 parMultiplyBy :: Coef -> Poly -> Poly
 parMultiplyBy a p1 = parMap rpar (a*) p1 
+
+parMinusPoly :: Poly -> Poly -> Poly
+parMinusPoly p1 p2 = parAddPoly p1 (parMultiplyBy (-1) p2)
+
+parAddPoly :: Poly -> Poly -> Poly
+parAddPoly p1 p2 = if (length p1 >= length p2)
+                then [x + y | x <- p1 | y <- (p2 ++ repeat 0)]
+                else parAddPoly p2 p1
+
 
 
 remainder :: Poly -> Poly -> Poly
@@ -30,7 +39,7 @@ remainder' n k !r !v
                 | otherwise = if k > (n `div` 2)  
                                  then rem `par` rem
                                  else rem
-                where rn = minusPoly r (parMultiplyBy fract xn)
+                where rn = parMinusPoly r (parMultiplyBy fract xn)
                       xn = multiplyByXn v expn
                       fract = lceGPE r/lceGPE v
                       expn = fromIntegral(degreeGPE r - degreeGPE v)
