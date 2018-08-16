@@ -46,9 +46,6 @@ generatePoly n = do
   let p = convertToRatio x
   return p
 
-main = do (a:_) <- getArgs
-          let n = read a :: Int
-          p1 <- generatePoly n
-          p2 <- generatePoly n
-          let r1 = resultant' p1 p2
-          print r1
+main = print $ resultant' [84,84,4,2,1,5,3,4] [4,4,5,5,4] 
+
+

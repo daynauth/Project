@@ -51,7 +51,7 @@ remainder' n k !r !v
 --parFold f = foldl1' f . withStrategy (parList rseq)
 parFold f = foldl1' f . withStrategy (parBuffer 5 rdeepseq)
 
-parResultant u v = (firstPoly $ last r) * foldT' (*) [(-1) ^ (m * n) * l ^ (m - s) | i <- [0 .. n - 3], 
+parResultant u v = (firstPoly $ last r) * parFold (*) [(-1) ^ (m * n) * l ^ (m - s) | i <- [0 .. n - 3], 
       let m = degreeGPE (r !! i); n = degreeGPE (r !! (i + 1)); s = degreeGPE (r !! (i + 2)); l = lceGPE (r !! (i + 1))] 
        where r = remSeq u v
              n = length r
@@ -83,8 +83,8 @@ foldT' f xs =
       let n = length xs
           (ys, zs) = splitAt (n `div` 2) xs
           in runEval $ do
-              left <- rpar (foldT' f ys)
-              right <- rpar (foldT' f zs)
+              left <- rpar (force(foldT' f ys))
+              right <- rpar (force (foldT' f zs))
               rseq left
               rseq right
               return (left `f` right)
